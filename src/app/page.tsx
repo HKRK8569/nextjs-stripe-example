@@ -1,3 +1,9 @@
+import Menu from "./components/Menu";
+
 export default function Home() {
-  return <div></div>;
+  return (
+    <div>
+      <Menu active="buy" />
+    </div>
+  );
 }
