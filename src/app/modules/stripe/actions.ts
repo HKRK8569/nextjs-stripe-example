@@ -6,8 +6,14 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
 
 export const createProduct = async (formData: FormData) => {
   const name = formData.get("name") as string;
-  await stripe.products.create({
+  const amount = formData.get("amount") as string;
+  const { id } = await stripe.products.create({
     name: name,
+  });
+  await stripe.prices.create({
+    product: id,
+    unit_amount: Number(amount),
+    currency: "jpy",
   });
   redirect("/list");
 };
