@@ -13,7 +13,7 @@ export default async function List() {
         <ListForm />
       </div>
       <div className="mt-10">
-        <ManagementList list={data.data} />
+        <ManagementList list={data} />
       </div>
     </div>
   );

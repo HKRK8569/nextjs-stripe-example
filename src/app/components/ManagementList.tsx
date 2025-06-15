@@ -1,20 +1,24 @@
 import type Stripe from "stripe";
 import { deleteProduct } from "../modules/stripe/actions";
+import type { ProductWithPrice } from "../modules/stripe/types";
 
 type ManagementItemProps = {
-  item: Stripe.Product;
+  item: ProductWithPrice;
 };
 type ManagementListProps = {
-  list: Stripe.Product[];
+  list: ProductWithPrice[];
 };
 
 function ManagementItem({ item }: ManagementItemProps) {
   return (
     <div className="flex bg-gray-100 p-2 rounded justify-between items-center">
-      <p>{item.name}</p>
+      <div className="flex gap-2">
+        <p>{item.product.name}</p>
+        <p>{item.price}円</p>
+      </div>
       <div>
         <form action={deleteProduct}>
-          <input type="hidden" name="id" value={item.id} />
+          <input type="hidden" name="id" value={item.product.id} />
           <button
             type="submit"
             className="ml-4 rounded py-1 px-2 text-white bg-red-400 hover:opacity-50"
@@ -30,7 +34,7 @@ export default async function ManagementList({ list }: ManagementListProps) {
   return (
     <div className="w-full">
       {list.map((item) => {
-        return <ManagementItem key={item.id} item={item} />;
+        return <ManagementItem key={item.product.id} item={item} />;
       })}
     </div>
   );
