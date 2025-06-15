@@ -1,12 +1,15 @@
 "use server";
-
+import { redirect } from "next/navigation";
 import Stripe from "stripe";
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
 
-export const createProduct = async (name: string) => {
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+
+export const createProduct = async (formData: FormData) => {
+  const name = formData.get("name") as string;
   await stripe.products.create({
     name: name,
   });
+  redirect("/list");
 };
 
 export const deleteProduct = async (id: string) => {
