@@ -19,24 +19,13 @@ export default function Menu({ active }: Props) {
       <Link
         href="/list"
         className={twMerge(
-          "h-full w-full flex items-center justify-center border-l border-r font-bold",
+          "h-full w-full flex items-center justify-center border-l font-bold rounded-r",
           active === "list"
             ? "bg-gray-50 text-black"
             : " bg-white text-gray-500"
         )}
       >
-        出品
-      </Link>
-      <Link
-        href="/delete"
-        className={twMerge(
-          "h-full w-full flex items-center rounded-r justify-center font-bold",
-          active === "delete"
-            ? "bg-gray-50 text-black"
-            : " bg-white text-gray-500"
-        )}
-      >
-        削除
+        商品管理
       </Link>
     </div>
   );

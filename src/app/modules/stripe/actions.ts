@@ -12,8 +12,10 @@ export const createProduct = async (formData: FormData) => {
   redirect("/list");
 };
 
-export const deleteProduct = async (id: string) => {
+export const deleteProduct = async (formData: FormData) => {
+  const id = formData.get("id") as string;
   await stripe.products.del(id);
+  redirect("/list");
 };
 
 export const getProductList = async () => {
