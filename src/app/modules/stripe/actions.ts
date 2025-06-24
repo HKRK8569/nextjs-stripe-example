@@ -39,7 +39,10 @@ export const getProductList = async () => {
 
       return {
         product,
-        price: data[0].unit_amount,
+        price: {
+          id: data[0].id,
+          price: data[0].unit_amount,
+        },
       };
     }
   );

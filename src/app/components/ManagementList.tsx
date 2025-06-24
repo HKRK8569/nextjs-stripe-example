@@ -16,7 +16,7 @@ function ManagementItem({ item, type }: ManagementItemProps) {
     <div className="flex bg-gray-100 p-2 rounded justify-between items-center">
       <div className="flex gap-2">
         <p>{item.product.name}</p>
-        <p>{item.price}円</p>
+        <p>{item.price.price}円</p>
       </div>
       <div>
         {type === "delete" ? (
