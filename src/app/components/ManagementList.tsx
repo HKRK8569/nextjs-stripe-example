@@ -1,6 +1,6 @@
-import type Stripe from "stripe";
 import { deleteProduct } from "../modules/stripe/actions";
 import type { ProductWithPrice } from "../modules/stripe/types";
+import { PaymentModalButton } from "./PaymentModalButton";
 
 type ManagementItemProps = {
   item: ProductWithPrice;
@@ -30,15 +30,10 @@ function ManagementItem({ item, type }: ManagementItemProps) {
             </button>
           </form>
         ) : (
-          <form>
-            <input type="hidden" name="id" value={item.product.id} />
-            <button
-              type="submit"
-              className="ml-4 rounded py-1 px-2 text-white bg-green-400 hover:opacity-50"
-            >
-              購入
-            </button>
-          </form>
+          <div>
+            <input type="hidden" name="id" value={item.price.id} />
+            <PaymentModalButton />
+          </div>
         )}
       </div>
     </div>
