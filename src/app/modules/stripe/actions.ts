@@ -50,3 +50,15 @@ export const getProductList = async () => {
   const products = await Promise.all(promiseGetPrices);
   return products;
 };
+
+export const createPaymentIntent = async (priceId: string) => {
+  const price = await stripe.prices.retrieve(priceId);
+  if (!price.unit_amount) return;
+  const paymentIntent = await stripe.paymentIntents.create({
+    amount: price.unit_amount,
+
+    currency: "jpy",
+  });
+
+  return paymentIntent.client_secret;
+};
