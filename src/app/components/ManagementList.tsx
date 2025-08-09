@@ -32,7 +32,10 @@ function ManagementItem({ item, type }: ManagementItemProps) {
         ) : (
           <div>
             <input type="hidden" name="id" value={item.price.id} />
-            <PaymentModalButton />
+            <PaymentModalButton
+              priceId={item.price.id}
+              productId={item.product.id}
+            />
           </div>
         )}
       </div>
