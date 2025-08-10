@@ -16,6 +16,7 @@ import {
   type StripePaymentElementOptions,
 } from "@stripe/stripe-js";
 import { createPaymentIntent } from "../modules/stripe/actions";
+import { Loader } from "./Loader";
 
 type PaymentModalHeaderProps = {
   onClose: () => void;
@@ -35,7 +36,7 @@ const stripePromise = loadStripe(
 
 const PaymentModalHeaderComponent = ({ onClose }: PaymentModalHeaderProps) => {
   return (
-    <div className="w-full flex justify-end">
+    <div className="w-full flex justify-end pb-2">
       <button className="hover:cursor-pointer" type="button" onClick={onClose}>
         <X className="text-gray-500" />
       </button>
@@ -82,7 +83,7 @@ const PaymentModal = ({
         className="z-50 rounded bg-white p-4 shadow-lg  w-[700px]"
       >
         <PaymentModalHeaderComponent onClose={onClosePaymentModal} />
-        {clientSecret && (
+        {clientSecret ? (
           <Elements
             options={{
               clientSecret,
@@ -92,6 +93,8 @@ const PaymentModal = ({
           >
             <CheckoutForm />
           </Elements>
+        ) : (
+          <Loader />
         )}
       </div>
     </div>
