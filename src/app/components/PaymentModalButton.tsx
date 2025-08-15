@@ -24,6 +24,11 @@ type PaymentModalHeaderProps = {
 
 const appearance: Appearance = {
   theme: "stripe",
+  variables: {
+    colorPrimary: "#4ade80",
+    colorBackground: "#ffffff",
+    colorText: "#111111",
+  },
 };
 
 const paymentElementOptions: StripePaymentElementOptions = {
