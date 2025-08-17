@@ -4,12 +4,7 @@
 import { useEffect, useState, type RefObject } from "react";
 import { usePaymentModal } from "../hooks/usePaymentModal";
 import { X } from "react-feather";
-import {
-  Elements,
-  PaymentElement,
-  useElements,
-  useStripe,
-} from "@stripe/react-stripe-js";
+import { Elements, PaymentElement } from "@stripe/react-stripe-js";
 import {
   type Appearance,
   loadStripe,
