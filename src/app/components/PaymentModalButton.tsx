@@ -27,7 +27,7 @@ const appearance: Appearance = {
 };
 
 const paymentElementOptions: StripePaymentElementOptions = {
-  layout: "accordion",
+  layout: "tabs",
 };
 
 const stripePromise = loadStripe(
@@ -48,6 +48,12 @@ const CheckoutForm = () => {
   return (
     <form id="payment-form" onSubmit={() => {}}>
       <PaymentElement id="payment-element" options={paymentElementOptions} />
+      <button
+        className="text-white font-bold bg-green-400 w-full px-4 py-3 rounded mt-4"
+        type="submit"
+      >
+        今すぐ支払う
+      </button>
     </form>
   );
 };
