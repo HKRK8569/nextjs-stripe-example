@@ -1,10 +1,15 @@
 "use client";
 
 // https://docs.stripe.com/payments/quickstart
-import { useEffect, useState, type RefObject } from "react";
+import { type FormEvent, useEffect, useState, type RefObject } from "react";
 import { usePaymentModal } from "../hooks/usePaymentModal";
 import { X } from "react-feather";
-import { Elements, PaymentElement } from "@stripe/react-stripe-js";
+import {
+  Elements,
+  PaymentElement,
+  useElements,
+  useStripe,
+} from "@stripe/react-stripe-js";
 import {
   type Appearance,
   loadStripe,
@@ -45,8 +50,29 @@ const PaymentModalHeaderComponent = ({ onClose }: PaymentModalHeaderProps) => {
 };
 
 const CheckoutForm = () => {
+  const stripe = useStripe();
+  const elements = useElements();
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+
+    if (!stripe || !elements) {
+      // Stripe.js hasn't yet loaded.
+      // Make sure to disable form submission until Stripe.js has loaded.
+      return;
+    }
+
+    const { error } = await stripe.confirmPayment({
+      elements,
+      confirmParams: {
+        // Make sure to change this to your payment completion page
+        return_url: "http://localhost:3000",
+      },
+    });
+  };
+
   return (
-    <form id="payment-form" onSubmit={() => {}}>
+    <form id="payment-form" onSubmit={handleSubmit}>
       <PaymentElement id="payment-element" options={paymentElementOptions} />
       <button
         className="text-white font-bold bg-green-400 w-full px-4 py-3 rounded mt-4"
