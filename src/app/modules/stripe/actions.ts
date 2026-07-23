@@ -26,29 +26,22 @@ export const deleteProduct = async (formData: FormData) => {
 };
 
 export const getProductList = async () => {
-  const { data } = await stripe.products.list();
-  const promiseGetPrices: Promise<ProductWithPrice>[] = data.map(
-    async (product) => {
-      const { data } = await stripe.prices.list({
-        product: product.id,
-      });
+  const { data } = await stripe.products.list({
+    active: true,
+    expand: ["data.default_price"],
+  });
 
-      if (!data[0].unit_amount) {
-        throw new Error("unitAmount is notfound");
-      }
+  return data.map((product) => {
+    const priceObj = product.default_price as Stripe.Price | null;
 
-      return {
-        product,
-        price: {
-          id: data[0].id,
-          price: data[0].unit_amount,
-        },
-      };
-    }
-  );
-
-  const products = await Promise.all(promiseGetPrices);
-  return products;
+    return {
+      product,
+      price: {
+        id: priceObj?.id ?? "",
+        price: priceObj?.unit_amount ?? 0,
+      },
+    };
+  });
 };
 
 export const createPaymentIntent = async (priceId: string) => {
