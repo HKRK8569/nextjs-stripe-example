@@ -19,9 +19,10 @@ export const createProduct = async (formData: FormData) => {
   redirect("/list");
 };
 
-export const deleteProduct = async (formData: FormData) => {
+export const archiveProduct = async (formData: FormData) => {
   const id = formData.get("id") as string;
-  await stripe.products.del(id);
+  // 価格が紐づいた商品はStripeのAPIでは削除できないため、アーカイブで対応する
+  await stripe.products.update(id, { active: false });
   redirect("/list");
 };
 

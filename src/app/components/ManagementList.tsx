@@ -1,4 +1,4 @@
-import { deleteProduct } from "../modules/stripe/actions";
+import { archiveProduct } from "../modules/stripe/actions";
 import type { ProductWithPrice } from "../modules/stripe/types";
 import { PaymentModalButton } from "./PaymentModalButton";
 
@@ -20,7 +20,7 @@ function ManagementItem({ item, type }: ManagementItemProps) {
       </div>
       <div>
         {type === "delete" ? (
-          <form action={deleteProduct}>
+          <form action={archiveProduct}>
             <input type="hidden" name="id" value={item.product.id} />
             <button
               type="submit"
