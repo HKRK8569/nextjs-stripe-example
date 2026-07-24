@@ -118,13 +118,16 @@ const PaymentModal = ({
   onClosePaymentModal,
 }: PaymentModalProps) => {
   const [clientSecret, setClientSecret] = useState<string>();
+  const [customerSessionClientSecret, setCustomerSessionClientSecret] =
+    useState<string>();
 
   useEffect(() => {
     const fetchCreatePaymentIntent = async () => {
       if (!priceId) return;
-      const clientSecret = await createPaymentIntent(priceId);
-      if (!clientSecret) return;
-      setClientSecret(clientSecret);
+      const result = await createPaymentIntent(priceId);
+      if (!result) return;
+      setClientSecret(result.clientSecret);
+      setCustomerSessionClientSecret(result.customerSessionClientSecret);
     };
     fetchCreatePaymentIntent();
   }, [priceId]);
@@ -140,6 +143,7 @@ const PaymentModal = ({
           <Elements
             options={{
               clientSecret,
+              customerSessionClientSecret,
               appearance: appearance,
             }}
             stripe={stripePromise}
