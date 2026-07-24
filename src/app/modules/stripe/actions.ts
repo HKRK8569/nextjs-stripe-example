@@ -45,13 +45,38 @@ export const getProductList = async () => {
 };
 
 export const createPaymentIntent = async (priceId: string) => {
+  // 固定のデモユーザーで決済する（実運用ではログインユーザーに紐づくCustomerを使う）
+  const customerId = process.env.STRIPE_CUSTOMER_ID;
+  if (!customerId) return;
+
   const price = await stripe.prices.retrieve(priceId);
   if (!price.unit_amount) return;
+
   const paymentIntent = await stripe.paymentIntents.create({
     amount: price.unit_amount,
-
     currency: "jpy",
+    customer: customerId,
+  });
+  if (!paymentIntent.client_secret) return;
+
+  // Payment Elementで保存済みカードの表示・保存・削除を有効にする
+  const customerSession = await stripe.customerSessions.create({
+    customer: customerId,
+    components: {
+      payment_element: {
+        enabled: true,
+        features: {
+          payment_method_redisplay: "enabled",
+          payment_method_save: "enabled",
+          payment_method_save_usage: "off_session",
+          payment_method_remove: "enabled",
+        },
+      },
+    },
   });
 
-  return paymentIntent.client_secret;
+  return {
+    clientSecret: paymentIntent.client_secret,
+    customerSessionClientSecret: customerSession.client_secret,
+  };
 };
