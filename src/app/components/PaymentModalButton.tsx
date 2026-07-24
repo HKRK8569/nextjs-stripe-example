@@ -49,35 +49,52 @@ const PaymentModalHeaderComponent = ({ onClose }: PaymentModalHeaderProps) => {
   );
 };
 
-const CheckoutForm = () => {
+type CheckoutFormProps = {
+  onClosePaymentModal: () => void;
+};
+const CheckoutForm = ({ onClosePaymentModal }: CheckoutFormProps) => {
   const stripe = useStripe();
   const elements = useElements();
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (!stripe || !elements) {
-      // Stripe.js hasn't yet loaded.
-      // Make sure to disable form submission until Stripe.js has loaded.
+    if (!stripe || !elements || isProcessing) {
       return;
     }
+    setIsProcessing(true);
 
-    const { error } = await stripe.confirmPayment({
+    const { error, paymentIntent } = await stripe.confirmPayment({
       elements,
       confirmParams: {
         return_url: window.location.origin,
       },
+      // カード決済はリダイレクトせずその場で結果を受け取る
+      redirect: "if_required",
     });
+
+    // TODO: コンビニ払いなどリダイレクト型の決済手段を有効化する際は、
+    // return_url先のページで payment_intent_client_secret を読んで結果を表示する
+    // TODO: succeeded以外のステータス（processingなど）やエラー種別ごとの分岐を実装する
+    if (error) {
+      alert(error.message ?? "決済に失敗しました。");
+      setIsProcessing(false);
+    } else if (paymentIntent?.status === "succeeded") {
+      alert("決済に成功しました。");
+      onClosePaymentModal();
+    }
   };
 
   return (
     <form id="payment-form" onSubmit={handleSubmit}>
       <PaymentElement id="payment-element" options={paymentElementOptions} />
       <button
-        className="text-white font-bold bg-green-400 w-full px-4 py-3 rounded mt-4"
+        className="text-white font-bold bg-green-400 w-full px-4 py-3 rounded mt-4 disabled:opacity-50"
         type="submit"
+        disabled={!stripe || isProcessing}
       >
-        今すぐ支払う
+        {isProcessing ? "処理中..." : "今すぐ支払う"}
       </button>
     </form>
   );
@@ -122,7 +139,7 @@ const PaymentModal = ({
             }}
             stripe={stripePromise}
           >
-            <CheckoutForm />
+            <CheckoutForm onClosePaymentModal={onClosePaymentModal} />
           </Elements>
         ) : (
           <Loader />
