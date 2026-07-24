@@ -56,6 +56,7 @@ const CheckoutForm = ({ onClosePaymentModal }: CheckoutFormProps) => {
   const stripe = useStripe();
   const elements = useElements();
   const [isProcessing, setIsProcessing] = useState(false);
+  const [isComplete, setIsComplete] = useState(false);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -88,11 +89,15 @@ const CheckoutForm = ({ onClosePaymentModal }: CheckoutFormProps) => {
 
   return (
     <form id="payment-form" onSubmit={handleSubmit}>
-      <PaymentElement id="payment-element" options={paymentElementOptions} />
+      <PaymentElement
+        id="payment-element"
+        options={paymentElementOptions}
+        onChange={(event) => setIsComplete(event.complete)}
+      />
       <button
         className="text-white font-bold bg-green-400 w-full px-4 py-3 rounded mt-4 disabled:opacity-50"
         type="submit"
-        disabled={!stripe || isProcessing}
+        disabled={!stripe || isProcessing || !isComplete}
       >
         {isProcessing ? "処理中..." : "今すぐ支払う"}
       </button>
